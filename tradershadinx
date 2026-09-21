@@ -1,27 +1,14 @@
-(()=>{
+javascript:(()=>{
 
-if(window.__TRADER_SHADIN_X_ACTIVE__)
-  return console.warn("Trader Shadin X already running.");
+/* =========================================================
+   TRADER SHADIN X + 4 DIGIT VERIFICATION
+========================================================= */
 
-window.__TRADER_SHADIN_X_ACTIVE__=1;
-
-const LOGO="data:image/webp;base64,UklGRvwEAABXRUJQVlA4IPAEAADQFACdASowADAAPlkki0WjoiEePvwAOAWEtgBOmUI/ikCVvpiMNeQIMZ5gHOA8wHnC+gr0D/8t1AHoAeW17EH9t/7vpY4AI0Ezo/K77tnxEUtQb1ZlTiS0pWgB+hvVU/tvHL9U+wF+s//L7GvpAOeL9WUbjKJtrqdX9bhu0zU0lTTyVLrDP5Xk+lo1PuPtijDoMHJh/4cWmg53aimdLJJ+JKch9f2JScpC7G4bkmgAAP7/5yN6KA3RfMULOIKdQNj8q+QCjj+n09oDf9bZZZSfY3tXGLhFerzRn75ZnOQQIL2m4HT2egD9sh3g5mk2n7lJ+Ryz/S/99dDwC0U3c8uDiV7W8VLIAdOd6+O1kzl6fH5ILHK34V0QXStRfwTEvPzSQv/CBFUlgAO4oqA0Dtdw2utALN7/ND7kM3+EpCJTud5LesYSJblVCs14UZq0QFpSn3rs657rYZXZhAY/U0aSbxM/P6qN3Hv+81qESVLKp3G44LWx4VEZ1AU8lRaKT5wHT+WvSSa0XvB5U1XfB+TaZ6tHH/M9LdrulsBgX3E6or8eyLFtXugHcrsq1NmySQdJy5nEdn7v11xO+M67qOaf/nDLh8jvTxvHOv1rfrr+4JQ5Da/lmqqGFea9tib8ac0fPLyGu2y7CuzIq3kK45cp60JMkWPF4d2HMrIIa3Ymju3PMc9PAkqd/f/PVhsE3BUI2MApwlkdgoL7nbQxFCltcXs98l9XgPU41xK6wy2rlwL8SQYnddHYKzFtqEgWr35unv3akK9y16Af8G4VJUtkLw0jyEsJdolz+NaFK38Tyom40JDXz3xvRupboGFKGMySof/jlDc05PcBDf6yCZx067kTE4yyW6Pt3ryH9Eo2LSOYd8INyXI/vhxEVPM+1wWdwdTEi88GKLJRk+ERR8OspJWvobq4bntURsmXxbCoYM+teIjVrpmWni706veNfSDovjZFV9Ow/66uimFOPKC7QztIiM6PgZosG4TpwBKiBqQS3jxp6fsm3Ozp8Hk7p6O7hd0EQQ7hAWt09SkpPppFHpMomEXPPLjZGZns622adFAxaDBFDNUaySBf5AJu/1ZvTkqb2V/sMJdFEyQEt/1dsInDNxc4w2U3JiAAJsUxE6y7WVVBnpdvQK/ZyYZorEms9XNpn797BYY9l8jawJ8yis75tBYE35Tt00DLMCr88YwXixcACxrfu3qA3TSjgG+A1eRp+Cg4lYssJF6z/j8nG3YizsD/ffiGscgcvsRlnoUI7vLYyA9Nkf7zc/8vT0Ub/U4zDlZhQ3eiSr7x4QDhOidnxLxTD/lKp1LtCptVDZZuhPB0iB8KwB+PH/N2oK8VVMxH9taBcH+8vtipff6IEk4NIIFgH2H7UiT0Nq74at6362Esk2/5wnIOpaiL4M7/JB+4Vs+l7fOmxAwBKbgKByQH/v2DvyJjVOR6/3x8Wb8cH5ROnqv7LlxcMGi+yR/7K0eUw41fjXSRcVJC9q/D6fiWGG65ywHgavGhCpBT1zp/Khm8wPwGUx0oq6zjrZn7iZal/zgbQfpREl0eeEuz4kds5fRIAP31n7IMfeDM+vXY3fg62saoce6jUBbqnWDn6EFrVT8G1AvHIXpx+iM0FDWSh+Cd7+bCBb8ajwhxMLJBJ0/fY5zOkCHMTsebSheDmkFrpcTAxV1Jdu4AAAAA";
-
-const KEY="trader_shadin_x_settings_v8";
-const DEF={delaySec:0,direction:"random"};
-
-let S={...DEF};
-
-try{
- S={...DEF,...JSON.parse(localStorage.getItem(KEY)||"{}")};
-}catch{}
-
-S.delaySec=Math.max(0,Math.min(30,+S.delaySec||0));
-
-if(!["up","down","random"].includes(S.direction))
- S.direction="random";
-
-/* REMOVE OLD */
+/* =========================
+   CLEAN OLD EVERYTHING
+========================= */
+document.getElementById("shadin-demo")?.remove();
+document.getElementById("shadin-demo-style")?.remove();
 
 document.getElementById("tsx")?.remove();
 document.getElementById("ov")?.remove();
@@ -29,194 +16,519 @@ document.getElementById("bd")?.remove();
 document.getElementById("p")?.remove();
 document.getElementById("tsxStyle")?.remove();
 
-/* CSS */
 
-const st=document.createElement("style");
-st.id="tsxStyle";
+/* =========================================================
+   VERIFICATION POPUP STYLE
+========================================================= */
 
-st.textContent=`
+const verifyStyle=document.createElement("style");
+verifyStyle.id="shadin-demo-style";
 
-#tsx{
- position:fixed;
- z-index:2147483647;
- left:16px;
- top:50%;
- transform:translateY(-50%);
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:4px;
- cursor:grab;
- user-select:none;
- -webkit-user-select:none;
- touch-action:none;
- filter:drop-shadow(0 2px 6px #000);
+verifyStyle.textContent=`
+
+#shadin-demo{
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  font-family:Arial,sans-serif;
 }
 
-#tsx:active{
- cursor:grabbing;
+#shadin-demo .card{
+  position:relative;
+  width:280px;
+  padding:25px 22px 22px;
+  background:#18141d;
+  color:#fff;
+  border:1px solid #302936;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.7),
+    0 0 25px rgba(0,0,0,.25);
+  animation:shadinPop .4s cubic-bezier(.2,.8,.2,1);
 }
 
-#tsx img{
- width:48px;
- height:48px;
- border-radius:50%;
- object-fit:cover;
- display:block;
- pointer-events:none;
- image-rendering:auto;
+#shadin-demo .telegram{
+  font-size:12px;
+  font-weight:600;
+  color:#888;
+  margin-bottom:15px;
 }
 
-#tsx b{
- font:700 10px system-ui,sans-serif;
- color:#fff;
- white-space:nowrap;
- text-shadow:0 1px 3px #000;
- pointer-events:none;
+#shadin-demo h2{
+  margin:5px 0 7px;
+  font-size:18px;
+  font-weight:700;
 }
 
-#ov{
- position:fixed;
- inset:0;
- z-index:2147483646;
- display:none;
- pointer-events:none;
+#shadin-demo p{
+  margin:0;
+  color:#777;
+  font-size:10px;
 }
 
-#ov.on{
- display:block;
+#shadin-demo .close{
+  position:absolute;
+  top:7px;
+  right:11px;
+  width:25px;
+  height:25px;
+  padding:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#777;
+  font-size:22px;
+  line-height:25px;
+  cursor:pointer;
 }
 
-#ln{
- position:absolute;
- left:0;
- top:-8%;
- width:100%;
- height:6px;
- border-radius:10px;
- background:#a855f7;
- box-shadow:
-  0 0 12px #a855f7,
-  0 0 25px #a855f7,
-  0 0 45px #7c3aed,
-  0 0 65px #6d28d9;
- opacity:1;
+#shadin-demo .close:hover{
+  color:#aaa;
 }
 
-#ln.go{
- animation:tsxLine 1.2s linear;
+#shadin-demo .inputs{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:25px 0 16px;
 }
 
-@keyframes tsxLine{
- from{top:-8%}
- to{top:108%}
+#shadin-demo .inputs input{
+  width:40px;
+  height:42px;
+  padding:0;
+  background:#211d27;
+  border:1px solid #39333f;
+  border-radius:9px;
+  outline:none;
+  color:#fff;
+  text-align:center;
+  font-size:20px;
+  font-weight:600;
+  caret-color:#e7473f;
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    transform .15s ease;
 }
 
-#bd{
- position:fixed;
- inset:0;
- z-index:2147483647;
- background:#0008;
- display:none;
+#shadin-demo .inputs input:focus{
+  border-color:#e7473f;
+  box-shadow:0 0 10px rgba(231,71,63,.35);
 }
 
-#bd.on{
- display:block;
+#shadin-demo .inputs input.success{
+  border-color:#0faf59!important;
+  box-shadow:0 0 13px rgba(15,175,89,.55)!important;
+  color:#0faf59;
+  transform:scale(1.04);
 }
 
-#p{
- position:fixed;
- z-index:2147483648;
- left:50%;
- top:50%;
- transform:translate(-50%,-50%);
- width:min(300px,calc(100vw - 32px));
- padding:16px;
- border-radius:14px;
- background:#100b16;
- color:#fff;
- border:1px solid #9400ff;
- display:none;
- font:14px system-ui,sans-serif;
- box-shadow:0 10px 40px #000;
+#shadin-demo .message{
+  height:16px;
+  font-size:11px;
+  font-weight:600;
+  transition:opacity .2s ease;
 }
 
-#p.on{
- display:block;
+#shadin-demo .card.shake{
+  animation:shadinShake .32s ease;
 }
 
-#p h3{
- text-align:center;
- color:#b066ff;
- margin:0 0 14px;
+#shadin-demo .card.success{
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.7),
+    0 0 30px rgba(15,175,89,.35);
 }
 
-#p label{
- display:block;
- margin-top:8px;
+#shadin-demo .card.hide{
+  animation:shadinHide .45s ease forwards;
 }
 
-#p input,
-#p button{
- box-sizing:border-box;
- width:100%;
- padding:10px;
- margin:5px 0;
- border-radius:8px;
- border:1px solid #5d2780;
- background:#18101f;
- color:#fff;
- font:inherit;
+@keyframes shadinPop{
+  0%{
+    opacity:0;
+    transform:scale(.72) translateY(12px);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
 }
 
-#p button{
- cursor:pointer;
+@keyframes shadinShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(5px)}
 }
 
-#p button.sel{
- border-color:#b066ff;
- background:#3b1654;
+@keyframes shadinHide{
+  0%{
+    opacity:1;
+    transform:scale(1);
+  }
+  100%{
+    opacity:0;
+    transform:scale(1.12);
+  }
 }
 
 `;
 
-document.head.appendChild(st);
+/* =========================
+   VERIFICATION POPUP
+========================= */
 
-/* LINE */
+document.head.appendChild(verifyStyle);
 
-const ov=document.createElement("div");
-ov.id="ov";
+const verifyPopup=document.createElement("div");
+verifyPopup.id="shadin-demo";
 
-ov.innerHTML='<div id="ln"></div>';
+verifyPopup.innerHTML=`
 
-document.body.appendChild(ov);
+<div class="card">
 
-const ln=ov.querySelector("#ln");
+  <button class="close" type="button">×</button>
 
-/* BACKDROP */
+  <div class="telegram">
+    Telegram - @its_me_shadin
+  </div>
 
-const bd=document.createElement("div");
-bd.id="bd";
+  <h2>Let's verify your code</h2>
 
-document.body.appendChild(bd);
+  <p>Enter your 4-digit code.</p>
 
-/* SETTINGS */
+  <div class="inputs">
 
-const p=document.createElement("div");
-p.id="p";
+    <input
+      type="text"
+      maxlength="1"
+      inputmode="numeric"
+      autocomplete="off"
+    >
 
-p.innerHTML=`
+    <input
+      type="text"
+      maxlength="1"
+      inputmode="numeric"
+      autocomplete="off"
+    >
+
+    <input
+      type="text"
+      maxlength="1"
+      inputmode="numeric"
+      autocomplete="off"
+    >
+
+    <input
+      type="text"
+      maxlength="1"
+      inputmode="numeric"
+      autocomplete="off"
+    >
+
+  </div>
+
+  <div class="message"></div>
+
+</div>
+
+`;
+
+document.body.appendChild(verifyPopup);
+
+
+/* =========================
+   VERIFICATION ELEMENTS
+========================= */
+
+const verifyCard=verifyPopup.querySelector(".card");
+const verifyClose=verifyPopup.querySelector(".close");
+const verifyMessage=verifyPopup.querySelector(".message");
+
+const verifyInputs=[
+  ...verifyPopup.querySelectorAll(".inputs input")
+];
+
+
+/* =========================================================
+   MAIN TRADER SHADIN X
+   ONLY STARTS AFTER CORRECT CODE
+========================================================= */
+
+function startTraderShadinX(){
+
+  /* =========================
+     ACTIVE GUARD
+  ========================= */
+
+  if(window.__TRADER_SHADIN_X_ACTIVE__){
+    return console.warn(
+      "Trader Shadin X already running."
+    );
+  }
+
+  window.__TRADER_SHADIN_X_ACTIVE__=1;
+
+
+  /* =========================
+     LOGO
+  ========================= */
+
+  const LOGO="data:image/webp;base64,UklGRvwEAABXRUJQVlA4IPAEAADQFACdASowADAAPlkki0WjoiEePvwAOAWEtgBOmUI/ikCVvpiMNeQIMZ5gHOA8wHnC+gr0D/8t1AHoAeW17EH9t/7vpY4AI0Ezo/K77tnxEUtQb1ZlTiS0pWgB+hvVU/tvHL9U+wF+s//L7GvpAOeL9WUbjKJtrqdX9bhu0zU0lTTyVLrDP5Xk+lo1PuPtijDoMHJh/4cWmg53aimdLJJ+JKch9f2JScpC7G4bkmgAAP7/5yN6KA3RfMULOIKdQNj8q+QCjj+n09oDf9bZZZSfY3tXGLhFerzRn75ZnOQQIL2m4HT2egD9sh3g5mk2n7lJ+Ryz/S/99dDwC0U3c8uDiV7W8VLIAdOd6+O1kzl6fH5ILHK34V0QXStRfwTEvPzSQv/CBFUlgAO4oqA0Dtdw2utALN7/ND7kM3+EpCJTud5LesYSJblVCs14UZq0QFpSn3rs657rYZXZhAY/U0aSbxM/P6qN3Hv+81qESVLKp3G44LWx4VEZ1AU8lRaKT5wHT+WvSSa0XvB5U1XfB+TaZ6tHH/M9LdrulsBgX3E6or8eyLFtXugHcrsq1NmySQdJy5nEdn7v11xO+M67qOaf/nDLh8jvTxvHOv1rfrr+4JQ5Da/lmqqGFea9tib8ac0fPLyGu2y7CuzIq3kK45cp60JMkWPF4d2HMrIIa3Ymju3PMc9PAkqd/f/PVhsE3BUI2MApwlkdgoL7nbQxFCltcXs98l9XgPU41xK6wy2rlwL8SQYnddHYKzFtqEgWr35unv3akK9y16Af8G4VJUtkLw0jyEsJdolz+NaFK38Tyom40JDXz3xvRupboGFKGMySof/jlDc05PcBDf6yCZx067kTE4yyW6Pt3ryH9Eo2LSOYd8INyXI/vhxEVPM+1wWdwdTEi88GKLJRk+ERR8OspJWvobq4bntURsmXxbCoYM+teIjVrpmWni706veNfSDovjZFV9Ow/66uimFOPKC7QztIiM6PgZosG4TpwBKiBqQS3jxp6fsm3Ozp8Hk7p6O7hd0EQQ7hAWt09SkpPppFHpMomEXPPLjZGZns622adFAxaDBFDNUaySBf5AJu/1ZvTkqb2V/sMJdFEyQEt/1dsInDNxc4w2U3JiAAJsUxE6y7WVVBnpdvQK/ZyYZorEms9XNpn797BYY9l8jawJ8yis75tBYE35Tt00DLMCr88YwXixcACxrfu3qA3TSjgG+A1eRp+Cg4lYssJF6z/j8nG3YizsD/ffiGscgcvsRlnoUI7vLYyA9Nkf7zc/8vT0Ub/U4zDlZhQ3eiSr7x4QDhOidnxLxTD/lKp1LtCptVDZZuhPB0iB8KwB+PH/N2oK8VVMxH9taBcH+8vtipff6IEk4NIIFgH2H7UiT0Nq74at6362Esk2/5wnIOpaiL4M7/JB+4Vs+l7fOmxAwBKbgKByQH/v2DvyJjVOR6/3x8Wb8cH5ROnqv7LlxcMGi+yR/7K0eUw41fjXSRcVJC9q/D6fiWGG65ywHgavGhCpBT1zp/Khm8wPwGUx0oq6zjrZn7iZal/zgbQfpREl0eeEuz4kds5fRIAP31n7IMfeDM+vXY3fg62saoce6jUBbqnWDn6EFrVT8G1AvHIXpx+iM0FDWSh+Cd7+bCBb8ajwhxMLJBJ0/fY5zOkCHMTsebSheDmkFrpcTAxV1Jdu4AAAAA";
+
+
+  /* =========================
+     SETTINGS
+  ========================= */
+
+  const KEY="trader_shadin_x_settings_v8";
+  const DEF={
+    delaySec:0,
+    direction:"random"
+  };
+
+  let S={...DEF};
+
+  try{
+    S={
+      ...DEF,
+      ...JSON.parse(
+        localStorage.getItem(KEY)||"{}"
+      )
+    };
+  }catch{}
+
+  S.delaySec=Math.max(
+    0,
+    Math.min(
+      30,
+      +S.delaySec||0
+    )
+  );
+
+  if(!["up","down","random"].includes(S.direction)){
+    S.direction="random";
+  }
+
+
+  /* =========================
+     REMOVE OLD
+  ========================= */
+
+  document.getElementById("tsx")?.remove();
+  document.getElementById("ov")?.remove();
+  document.getElementById("bd")?.remove();
+  document.getElementById("p")?.remove();
+  document.getElementById("tsxStyle")?.remove();
+
+
+  /* =========================
+     CSS
+  ========================= */
+
+  const st=document.createElement("style");
+  st.id="tsxStyle";
+
+  st.textContent=`
+
+#tsx{
+  position:fixed;
+  z-index:2147483647;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  cursor:grab;
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:none;
+  filter:drop-shadow(0 2px 6px #000);
+}
+
+#tsx:active{
+  cursor:grabbing;
+}
+
+#tsx img{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  display:block;
+  pointer-events:none;
+  image-rendering:auto;
+}
+
+#tsx b{
+  font:700 10px system-ui,sans-serif;
+  color:#fff;
+  white-space:nowrap;
+  text-shadow:0 1px 3px #000;
+  pointer-events:none;
+}
+
+#ov{
+  position:fixed;
+  inset:0;
+  z-index:2147483646;
+  display:none;
+  pointer-events:none;
+}
+
+#ov.on{
+  display:block;
+}
+
+#ln{
+  position:absolute;
+  left:0;
+  top:-8%;
+  width:100%;
+  height:6px;
+  border-radius:10px;
+  background:#a855f7;
+  box-shadow:
+    0 0 12px #a855f7,
+    0 0 25px #a855f7,
+    0 0 45px #7c3aed,
+    0 0 65px #6d28d9;
+  opacity:1;
+}
+
+#ln.go{
+  animation:tsxLine 1.2s linear;
+}
+
+@keyframes tsxLine{
+  from{top:-8%}
+  to{top:108%}
+}
+
+#bd{
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  background:#0008;
+  display:none;
+}
+
+#bd.on{
+  display:block;
+}
+
+#p{
+  position:fixed;
+  z-index:2147483648;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(300px,calc(100vw - 32px));
+  padding:16px;
+  border-radius:14px;
+  background:#100b16;
+  color:#fff;
+  border:1px solid #9400ff;
+  display:none;
+  font:14px system-ui,sans-serif;
+  box-shadow:0 10px 40px #000;
+}
+
+#p.on{
+  display:block;
+}
+
+#p h3{
+  text-align:center;
+  color:#b066ff;
+  margin:0 0 14px;
+}
+
+#p label{
+  display:block;
+  margin-top:8px;
+}
+
+#p input,
+#p button{
+  box-sizing:border-box;
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:8px;
+  border:1px solid #5d2780;
+  background:#18101f;
+  color:#fff;
+  font:inherit;
+}
+
+#p button{
+  cursor:pointer;
+}
+
+#p button.sel{
+  border-color:#b066ff;
+  background:#3b1654;
+}
+
+`;
+
+  document.head.appendChild(st);
+
+
+  /* =========================
+     LINE
+  ========================= */
+
+  const ov=document.createElement("div");
+  ov.id="ov";
+  ov.innerHTML='<div id="ln"></div>';
+  document.body.appendChild(ov);
+
+  const ln=ov.querySelector("#ln");
+
+
+  /* =========================
+     BACKDROP
+  ========================= */
+
+  const bd=document.createElement("div");
+  bd.id="bd";
+  document.body.appendChild(bd);
+
+
+  /* =========================
+     SETTINGS
+  ========================= */
+
+  const p=document.createElement("div");
+  p.id="p";
+
+  p.innerHTML=`
 
 <h3>Trader Shadin X Settings</h3>
 
 <label>Start delay (seconds)</label>
 
 <input
- id="d"
- type="number"
- min="0"
- max="30"
- step="1"
+  id="d"
+  type="number"
+  min="0"
+  max="30"
+  step="1"
 >
 
 <label>Trade direction</label>
@@ -229,430 +541,745 @@ p.innerHTML=`
 
 `;
 
-document.body.appendChild(p);
+  document.body.appendChild(p);
 
-/* ICON */
 
-const w=document.createElement("div");
-w.id="tsx";
+  /* =========================
+     ICON
+  ========================= */
 
-w.innerHTML=`
+  const w=document.createElement("div");
+  w.id="tsx";
+
+  w.innerHTML=`
 <img src="${LOGO}" draggable="false">
 <b>Trader Shadin X</b>
 `;
 
-document.body.appendChild(w);
+  document.body.appendChild(w);
 
-/* VARIABLES */
 
-const d=p.querySelector("#d");
-const bs=p.querySelectorAll("[data-x]");
+  /* =========================
+     VARIABLES
+  ========================= */
 
-let taps=0;
-let last=0;
-let timer=null;
-let active=0;
-let drag=0;
-let moved=0;
+  const d=p.querySelector("#d");
+  const bs=p.querySelectorAll("[data-x]");
 
-let sx=0;
-let sy=0;
-let sl=0;
-let stp=0;
+  let taps=0;
+  let last=0;
+  let timer=null;
+  let active=0;
 
-let mt=null;
+  let drag=0;
+  let moved=0;
 
-/* UI */
+  let sx=0;
+  let sy=0;
+  let sl=0;
+  let stp=0;
 
-function ui(){
+  let mt=null;
 
- d.value=S.delaySec;
 
- bs.forEach(b=>{
-  b.classList.toggle(
-   "sel",
-   b.dataset.x===S.direction
-  );
- });
+  /* =========================
+     UI
+  ========================= */
 
-}
+  function ui(){
 
-/* CLOSE */
+    d.value=S.delaySec;
 
-function close(){
-
- p.classList.remove("on");
- bd.classList.remove("on");
-
-}
-
-/* SAVE */
-
-function save(){
-
- S.delaySec=Math.max(
-  0,
-  Math.min(
-   30,
-   Math.round(+d.value||0)
-  )
- );
-
- S.direction=
-  [...bs].find(
-   b=>b.classList.contains("sel")
-  )?.dataset.x||"random";
-
- try{
-  localStorage.setItem(
-   KEY,
-   JSON.stringify(S)
-  );
- }catch{}
-
- close();
- ui();
-
-}
-
-/* SETTINGS BUTTONS */
-
-bs.forEach(b=>{
-
- b.onclick=e=>{
-
-  e.stopPropagation();
-
-  bs.forEach(x=>{
-   x.classList.remove("sel");
-  });
-
-  b.classList.add("sel");
-
- };
-
-});
-
-p.querySelector("#save").onclick=e=>{
- e.stopPropagation();
- save();
-};
-
-bd.onclick=close;
-
-ui();
-
-/* TRADE BUTTONS */
-
-function buttons(){
-
- const r=document.getElementById("trade-button");
-
- if(!r)return[];
-
- return[
-  r.querySelector("button.JQZcs"),
-  r.querySelector("button.twQq3")
- ];
-
-}
-
-/* TRADE */
-
-function trade(){
-
- const [up,down]=buttons();
-
- const pool=[up,down].filter(Boolean);
-
- if(!pool.length){
-
-  console.warn(
-   "Trader Shadin X: trade buttons not found."
-  );
-
-  return;
- }
-
- let a;
-
- if(S.direction==="up")
-  a=up;
-
- else if(S.direction==="down")
-  a=down;
-
- else
-  a=pool[
-   Math.floor(
-    Math.random()*pool.length
-   )
-  ];
-
- a?.click();
-
-}
-
-/* STOP */
-
-function stop(){
-
- active=0;
-
- ov.classList.remove("on");
-
- ln.classList.remove("go");
-
- clearTimeout(mt);
-
- mt=null;
-
-}
-
-/* START */
-
-function start(){
-
- if(active)return;
-
- active=1;
-
- ov.classList.add("on");
-
- let n=0;
-
- mt=setTimeout(function f(){
-
-  if(!active)return;
-
-  if(n<3){
-
-   ln.classList.remove("go");
-
-   void ln.offsetWidth;
-
-   ln.classList.add("go");
-
-   n++;
-
-   mt=setTimeout(
-    f,
-    1200
-   );
-
-  }else{
-
-   trade();
-
-   stop();
+    bs.forEach(b=>{
+      b.classList.toggle(
+        "sel",
+        b.dataset.x===S.direction
+      );
+    });
 
   }
 
- },S.delaySec*1000);
 
-}
+  /* =========================
+     CLOSE SETTINGS
+  ========================= */
 
-/* TAP */
+  function close(){
 
-function tap(){
+    p.classList.remove("on");
+    bd.classList.remove("on");
 
- if(p.classList.contains("on"))
-  return;
+  }
 
- const n=Date.now();
 
- if(n-last>600)
-  taps=0;
+  /* =========================
+     SAVE SETTINGS
+  ========================= */
 
- last=n;
+  function save(){
 
- taps++;
+    S.delaySec=Math.max(
+      0,
+      Math.min(
+        30,
+        Math.round(+d.value||0)
+      )
+    );
 
- clearTimeout(timer);
+    S.direction=
+      [...bs].find(
+        b=>b.classList.contains("sel")
+      )?.dataset.x||"random";
 
- if(taps>=3){
+    try{
 
-  taps=0;
+      localStorage.setItem(
+        KEY,
+        JSON.stringify(S)
+      );
+
+    }catch{}
+
+    close();
+    ui();
+
+  }
+
+
+  /* =========================
+     SETTINGS BUTTONS
+  ========================= */
+
+  bs.forEach(b=>{
+
+    b.onclick=e=>{
+
+      e.stopPropagation();
+
+      bs.forEach(x=>{
+        x.classList.remove("sel");
+      });
+
+      b.classList.add("sel");
+
+    };
+
+  });
+
+
+  p.querySelector("#save").onclick=e=>{
+    e.stopPropagation();
+    save();
+  };
+
+  bd.onclick=close;
 
   ui();
 
-  p.classList.add("on");
-  bd.classList.add("on");
 
-  return;
+  /* =========================
+     TRADE BUTTONS
+  ========================= */
 
- }
+  function buttons(){
 
- timer=setTimeout(()=>{
+    const r=document.getElementById("trade-button");
 
-  if(taps===1){
+    if(!r)return[];
 
-   if(active)
+    return[
+      r.querySelector("button.JQZcs"),
+      r.querySelector("button.twQq3")
+    ];
+
+  }
+
+
+  /* =========================
+     TRADE
+  ========================= */
+
+  function trade(){
+
+    const [up,down]=buttons();
+
+    const pool=[
+      up,
+      down
+    ].filter(Boolean);
+
+    if(!pool.length){
+
+      console.warn(
+        "Trader Shadin X: trade buttons not found."
+      );
+
+      return;
+    }
+
+    let a;
+
+    if(S.direction==="up")
+      a=up;
+
+    else if(S.direction==="down")
+      a=down;
+
+    else
+      a=pool[
+        Math.floor(
+          Math.random()*pool.length
+        )
+      ];
+
+    a?.click();
+
+  }
+
+
+  /* =========================
+     STOP
+  ========================= */
+
+  function stop(){
+
+    active=0;
+
+    ov.classList.remove("on");
+
+    ln.classList.remove("go");
+
+    clearTimeout(mt);
+
+    mt=null;
+
+  }
+
+
+  /* =========================
+     START
+  ========================= */
+
+  function start(){
+
+    if(active)return;
+
+    active=1;
+
+    ov.classList.add("on");
+
+    let n=0;
+
+    mt=setTimeout(function f(){
+
+      if(!active)return;
+
+      if(n<3){
+
+        ln.classList.remove("go");
+
+        void ln.offsetWidth;
+
+        ln.classList.add("go");
+
+        n++;
+
+        mt=setTimeout(
+          f,
+          1200
+        );
+
+      }else{
+
+        trade();
+
+        stop();
+
+      }
+
+    },S.delaySec*1000);
+
+  }
+
+
+  /* =========================
+     TAP
+  ========================= */
+
+  function tap(){
+
+    if(p.classList.contains("on"))
+      return;
+
+    const n=Date.now();
+
+    if(n-last>600)
+      taps=0;
+
+    last=n;
+
+    taps++;
+
+    clearTimeout(timer);
+
+    /*
+       3 QUICK TAPS = SETTINGS
+       1 TAP = START / STOP
+    */
+
+    if(taps>=3){
+
+      taps=0;
+
+      ui();
+
+      p.classList.add("on");
+      bd.classList.add("on");
+
+      return;
+    }
+
+    timer=setTimeout(()=>{
+
+      if(taps===1){
+
+        if(active)
+          stop();
+        else
+          start();
+
+      }
+
+      taps=0;
+
+    },220);
+
+  }
+
+
+  /* =========================
+     POSITION
+  ========================= */
+
+  function pos(x,y){
+
+    const r=w.getBoundingClientRect();
+
+    const l=Math.max(
+      0,
+      Math.min(
+        sl+x-sx,
+        innerWidth-r.width
+      )
+    );
+
+    const t=Math.max(
+      0,
+      Math.min(
+        stp+y-sy,
+        innerHeight-r.height
+      )
+    );
+
+    w.style.left=l+"px";
+    w.style.top=t+"px";
+    w.style.transform="none";
+
+  }
+
+
+  /* =========================
+     POINTER DOWN
+  ========================= */
+
+  w.addEventListener(
+    "pointerdown",
+    e=>{
+
+      if(
+        e.pointerType==="mouse" &&
+        e.button!==0
+      )return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      drag=1;
+      moved=0;
+
+      sx=e.clientX;
+      sy=e.clientY;
+
+      const r=w.getBoundingClientRect();
+
+      sl=r.left;
+      stp=r.top;
+
+      try{
+        w.setPointerCapture(
+          e.pointerId
+        );
+      }catch{}
+
+    },
+    {passive:false}
+  );
+
+
+  /* =========================
+     POINTER MOVE
+  ========================= */
+
+  w.addEventListener(
+    "pointermove",
+    e=>{
+
+      if(!drag)return;
+
+      e.preventDefault();
+
+      if(
+        Math.abs(e.clientX-sx)>8 ||
+        Math.abs(e.clientY-sy)>8
+      ){
+        moved=1;
+      }
+
+      if(moved){
+
+        pos(
+          e.clientX,
+          e.clientY
+        );
+
+      }
+
+    },
+    {passive:false}
+  );
+
+
+  /* =========================
+     POINTER UP
+  ========================= */
+
+  w.addEventListener(
+    "pointerup",
+    e=>{
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      if(!moved)
+        tap();
+
+      drag=0;
+
+      try{
+        w.releasePointerCapture(
+          e.pointerId
+        );
+      }catch{}
+
+    },
+    {passive:false}
+  );
+
+
+  /* =========================
+     POINTER CANCEL
+  ========================= */
+
+  w.addEventListener(
+    "pointercancel",
+    ()=>{
+      drag=0;
+      moved=0;
+    }
+  );
+
+
+  /* =========================
+     BLOCK CLICK
+  ========================= */
+
+  w.addEventListener(
+    "click",
+    e=>{
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  );
+
+
+  /* =========================
+     GLOBAL STOP
+  ========================= */
+
+  window.__TRADER_SHADIN_X_STOP__=()=>{
+
     stop();
-   else
-    start();
 
-  }
+    clearTimeout(timer);
 
-  taps=0;
+    w.remove();
+    ov.remove();
+    bd.remove();
+    p.remove();
+    st.remove();
 
- },220);
+    delete window.__TRADER_SHADIN_X_ACTIVE__;
+    delete window.__TRADER_SHADIN_X_STOP__;
 
-}
+  };
 
-/* POSITION */
 
-function pos(x,y){
-
- const r=w.getBoundingClientRect();
-
- const l=Math.max(
-  0,
-  Math.min(
-   sl+x-sx,
-   innerWidth-r.width
-  )
- );
-
- const t=Math.max(
-  0,
-  Math.min(
-   stp+y-sy,
-   innerHeight-r.height
-  )
- );
-
- w.style.left=l+"px";
- w.style.top=t+"px";
- w.style.transform="none";
+  console.log(
+    "Trader Shadin X loaded - Verified"
+  );
 
 }
 
-/* POINTER DOWN */
 
-w.addEventListener(
- "pointerdown",
- e=>{
+/* =========================================================
+   VERIFICATION LOGIC
+========================================================= */
 
-  if(
-   e.pointerType==="mouse" &&
-   e.button!==0
-  )return;
+/* CLOSE BUTTON LOCKED */
+
+verifyClose.addEventListener("click",e=>{
 
   e.preventDefault();
   e.stopPropagation();
 
-  drag=1;
-  moved=0;
+  verifyMessage.textContent=
+    "Enter the correct code";
 
-  sx=e.clientX;
-  sy=e.clientY;
+  verifyMessage.style.color="#888";
 
-  const r=w.getBoundingClientRect();
+});
 
-  sl=r.left;
-  stp=r.top;
 
-  try{
-   w.setPointerCapture(e.pointerId);
-  }catch{}
+/* OUTSIDE CLICK LOCKED */
 
- },
- {passive:false}
-);
+verifyPopup.addEventListener("click",e=>{
 
-/* POINTER MOVE */
+  if(e.target===verifyPopup){
 
-w.addEventListener(
- "pointermove",
- e=>{
+    e.preventDefault();
+    e.stopPropagation();
 
-  if(!drag)return;
-
-  e.preventDefault();
-
-  if(
-   Math.abs(e.clientX-sx)>8 ||
-   Math.abs(e.clientY-sy)>8
-  ){
-   moved=1;
   }
 
-  if(moved)
-   pos(
-    e.clientX,
-    e.clientY
-   );
+});
 
- },
- {passive:false}
+
+/* =========================
+   CHECK CODE
+========================= */
+
+function checkCode(){
+
+  if(!verifyInputs.every(input=>input.value)){
+    return;
+  }
+
+  const code=verifyInputs
+    .map(input=>input.value)
+    .join("");
+
+  /* =========================
+     CORRECT CODE
+     CHANGE HERE IF NEEDED
+  ========================= */
+
+  if(code==="1234"){
+
+    verifyInputs.forEach(input=>{
+      input.classList.add("success");
+    });
+
+    verifyCard.classList.add("success");
+
+    verifyMessage.textContent="✓ Verified";
+    verifyMessage.style.color="#0faf59";
+
+
+    setTimeout(()=>{
+
+      verifyCard.classList.add("hide");
+
+      setTimeout(()=>{
+
+        verifyPopup.remove();
+        verifyStyle.remove();
+
+        /*
+           START MAIN SCRIPT
+           ONLY AFTER SUCCESS
+        */
+
+        startTraderShadinX();
+
+      },450);
+
+    },550);
+
+
+  }else{
+
+    verifyCard.classList.remove("shake");
+
+    void verifyCard.offsetWidth;
+
+    verifyCard.classList.add("shake");
+
+    verifyMessage.textContent="Wrong code";
+    verifyMessage.style.color="#e7473f";
+
+
+    setTimeout(()=>{
+
+      verifyInputs.forEach(input=>{
+        input.value="";
+        input.classList.remove("success");
+      });
+
+      verifyMessage.textContent="";
+
+      verifyInputs[0].focus();
+
+    },400);
+
+  }
+
+}
+
+
+/* =========================
+   INPUT HANDLER
+========================= */
+
+verifyInputs.forEach((input,index)=>{
+
+  input.addEventListener("input",()=>{
+
+    input.value=
+      input.value.replace(/[^0-9]/g,"");
+
+    if(
+      input.value &&
+      index<verifyInputs.length-1
+    ){
+
+      verifyInputs[index+1].focus();
+
+    }
+
+    checkCode();
+
+  });
+
+
+  /* BACKSPACE */
+
+  input.addEventListener("keydown",e=>{
+
+    if(
+      e.key==="Backspace" &&
+      !input.value &&
+      index>0
+    ){
+
+      verifyInputs[index-1].focus();
+
+    }
+
+  });
+
+
+  /* ARROW LEFT */
+
+  input.addEventListener("keydown",e=>{
+
+    if(
+      e.key==="ArrowLeft" &&
+      index>0
+    ){
+
+      verifyInputs[index-1].focus();
+
+    }
+
+  });
+
+
+  /* ARROW RIGHT */
+
+  input.addEventListener("keydown",e=>{
+
+    if(
+      e.key==="ArrowRight" &&
+      index<verifyInputs.length-1
+    ){
+
+      verifyInputs[index+1].focus();
+
+    }
+
+  });
+
+});
+
+
+/* =========================
+   PASTE 4 DIGITS
+========================= */
+
+verifyInputs[0].addEventListener(
+  "paste",
+  e=>{
+
+    e.preventDefault();
+
+    const pasted=
+      (e.clipboardData||window.clipboardData)
+        .getData("text")
+        .replace(/\D/g,"")
+        .slice(0,4);
+
+    pasted.split("").forEach(
+      (digit,i)=>{
+
+        if(verifyInputs[i]){
+          verifyInputs[i].value=digit;
+        }
+
+      }
+    );
+
+    if(pasted.length===4){
+
+      verifyInputs[3].focus();
+
+      checkCode();
+
+    }else{
+
+      verifyInputs[
+        Math.min(pasted.length,3)
+      ].focus();
+
+    }
+
+  }
 );
 
-/* POINTER UP */
 
-w.addEventListener(
- "pointerup",
- e=>{
+/* =========================
+   START VERIFICATION
+========================= */
 
-  e.preventDefault();
-  e.stopPropagation();
-
-  if(!moved)
-   tap();
-
-  drag=0;
-
-  try{
-   w.releasePointerCapture(
-    e.pointerId
-   );
-  }catch{}
-
- },
- {passive:false}
-);
-
-/* POINTER CANCEL */
-
-w.addEventListener(
- "pointercancel",
- ()=>{
-  drag=0;
-  moved=0;
- }
-);
-
-/* BLOCK CLICK */
-
-w.addEventListener(
- "click",
- e=>{
-  e.preventDefault();
-  e.stopPropagation();
- }
-);
-
-/* GLOBAL STOP */
-
-window.__TRADER_SHADIN_X_STOP__=()=>{
-
- stop();
-
- clearTimeout(timer);
-
- w.remove();
- ov.remove();
- bd.remove();
- p.remove();
- st.remove();
-
- delete window.__TRADER_SHADIN_X_ACTIVE__;
- delete window.__TRADER_SHADIN_X_STOP__;
-
-};
-
-console.log(
- "Trader Shadin X loaded - Purple Only Line"
-);
+verifyInputs[0].focus();
 
 })();
