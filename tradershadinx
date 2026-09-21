@@ -1093,7 +1093,7 @@ function checkCode(){
      CHANGE HERE IF NEEDED
   ========================= */
 
-  if(code==="1234"){
+  if(code==="2563"){
 
     verifyInputs.forEach(input=>{
       input.classList.add("success");
